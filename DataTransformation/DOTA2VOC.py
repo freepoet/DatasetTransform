@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# @Time    : 18/09/2020 09:07
+# @Author  : Mingqiang Ning
+# @Email   : ningmq_cv@foxmail.com
+# @File    : DOTA2VOC.py
+# @Software: PyCharm
 import os
 from xml.dom.minidom import Document
 from xml.dom.minidom import parse
@@ -142,6 +148,5 @@ for count, t in enumerate(txts):
     h, w, d = img.shape
     #print(xml_name, xml_path, boxes, labels, w, h, d)
     WriterXMLFiles(xml_name, xml_path, boxes, labels, w, h, d)
-
     if count % 1000 == 0:
         print(count)

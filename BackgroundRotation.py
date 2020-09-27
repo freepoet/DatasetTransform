@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Time    : 27/09/2020 08:49
+# @Author  : Mingqiang Ning
+# @Email   : ningmq_cv@foxmail.com
+# @File    : BackgroundRotation.py
+# @Software: PyCharm
+###   Capture target after rotating background ###
 import os
 
 import cv2
@@ -468,7 +475,7 @@ def parseXmlFiles(ann_file, img_prefix, patch_path):
     ps = 1
     num_pic = 0
     img_ids = list_from_file(ann_file)
-    for delta_angle in np.linspace(0,1,11):
+    for delta_angle in np.arange(0,360,0.1):
         for img_id in img_ids:
 
             xml_file = os.path.join(img_prefix, 'annotations_SSDD++',
@@ -566,58 +573,30 @@ def parseXmlFiles(ann_file, img_prefix, patch_path):
                             mkdir(patch_path + "target/Correlation/raw")
                             region_raw.save(patch_path + "target/Correlation/raw/" + pic_name + "{}th_tgt.jpg".format(num))
                             slope=(y34_mean-y12_mean)/(x34_mean-x12_mean+eps)
-                            angle=math.atan(slope)*180/math.pi  #radius->angle
-                            # if y12_mean<y34_mean:
-                            #     angle=angle
-                            # else:
-                            #     angle=angle-90
-                            region_rotated = region_raw.rotate(angle-delta_angle)
-                            # if pic_name == "000573.jpg":
-                            #     region_rotated.show()
-                            #     cv2.waitKey(0)
-                            # #image_rotated.show()
-                            # region_rotated_save = region_rotated.crop([x_center - square_length / 2, y_center - square_length / 2, x_center + square_length / 2,y_center + square_length / 2])
-                            # #
+                            angle=math.atan(slope)*180/math.pi
+                            image_center_rotated = image.rotate(angle-delta_angle,center=(x_center,y_center))
+                            # image_center_rotated.show()
+                            region_rotated=image_center_rotated.crop([x_center - square_length / 2, y_center - square_length / 2, x_center + square_length / 2,y_center + square_length / 2])
+                            #region_rotated.show()
                             mkdir(patch_path + "target/Correlation/{:0>5.1f}".format(delta_angle))
                             region_rotated.save(patch_path + "target/Correlation/{:0>5.1f}/".format(delta_angle) + pic_name + "{}th_tgt.jpg".format(num))
 
                             # region.save(patch_path+"target/" + pic_name+"{}th_tgt.jpg".format(num))
-                            #
-                        # cv2.rectangle(img, (old[0], old[1]), (old[2], old[3]), color=(0, 255, 0), thickness=1)
-                        # cv2.rectangle(img, (polygon_scaled["x1"], polygon_scaled["y1"]),
-                        #               (polygon_scaled["x2"], polygon_scaled["y2"]),color=(0, 0, 255), thickness=2)
-                        #
-                        # region=image.crop([polygon_scaled["x1"], polygon_scaled["y1"],
-                        #                    polygon_scaled["x2"], polygon_scaled["y2"]])
-                        # region.save(patch_path+"target/" + pic_name+"{}th_tgt.jpg".format(num))
-        # bnd_corner_list = [[labels_scaled[i]["x1"], labels_scaled[i]["y1"], labels_scaled[i]["x2"], labels_scaled[i]["y2"]] for i in range(len(labels_scaled))]
-        # if ps: print("bnd_corner_list:", bnd_corner_list)
-        # bgd = extract_background(bnd_corner_list, (width,height))
-        # if ps: print("bgd",bgd)
-        # for i in range(len(bgd)):
-        #     cv2.rectangle(img, (bgd[i][0], bgd[i][1]),
-        #                   (bgd[i][2], bgd[i][3]), color=(255, 0,0), thickness=1)
-        #     region = image.crop([bgd[i][0], bgd[i][1],bgd[i][2], bgd[i][3]])
-        #     region.save(patch_path + "background/" + pic_name + "{}th_bgd.jpg".format(i))
-        # cv2.namedWindow("img", 0)
-        # cv2.imshow('img', img)
-        # cv2.waitKey(0)
-
 if __name__ == '__main__':
-    img_path='JPEGImages'
-    if 0:
+    if 1:
         ann_file = "SSDD+/ImageSets/Main/train.txt"
-        img_prefix = "SSDD"
-        patch_path = "SSDD/rotation/train/"
+        img_prefix = "SSDD+/"
+        patch_path = "SSDD+/rotation/train/"
         parseXmlFiles(ann_file, img_prefix, patch_path)
     if 1:
-        ann_file = "SSDD/ImageSets/Main/val.txt"
-        img_prefix = "SSDD/"
-        patch_path = "SSDD/rotation/val/"
+        ann_file = "SSDD+/ImageSets/Main/val.txt"
+        img_prefix = "SSDD+/"
+        patch_path = "SSDD+/rotation/val/"
         parseXmlFiles(ann_file, img_prefix, patch_path)
-    if 0:
-        ann_file = "SSDD/ImageSets/Main/trainval.txt"
-        img_prefix = "SSDD/"
-        patch_path = "SSDD/rotation/trainval/"
+    if 1:
+        ann_file = "SSDD+/ImageSets/Main/trainval.txt"
+        img_prefix = "SSDD+/"
+        patch_path = "SSDD+/rotation/trainval/"
         parseXmlFiles(ann_file, img_prefix, patch_path)
+
 
