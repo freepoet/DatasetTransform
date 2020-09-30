@@ -18,18 +18,9 @@ import xml.etree.ElementTree as ET
 import numpy as np
 from mmcv import list_from_file
 from matplotlib import pyplot as plt
+import seaborn as sns
 
 
-# 参数依次为list,抬头,X轴标签,Y轴标签,XY轴的范围
-def draw_hist(myList, Title, Xlabel, Ylabel, Xmin, Xmax, Ymin, Ymax):
-    plt.hist(myList, 3000)  # bins = 50，顺便可以控制bin宽度
-    plt.xlim(Xmin, Xmax)
-    plt.ylim(Ymin, Ymax)
-    plt.xlabel(Xlabel)  # 横轴名
-    plt.ylabel(Ylabel)  # 纵轴名
-
-    plt.title(Title)
-    plt.show()
 def draw_caption(image, box, caption):
     b = np.array(box).astype(int)
     cv2.putText(image, caption, (b[0], b[1] - 10), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 1 )
@@ -474,7 +465,9 @@ def get_y_up(real_bottom,top):
 def parseXmlFiles(ann_file, img_prefix, patch_path):
     ps = 1
     num_pic = 0
-    ratios = {}
+    area_ratios = {}
+    width_ratios = {}
+    height_ratios = {}
     img_ids = list_from_file(ann_file)
 
     for img_id in img_ids:
@@ -553,7 +546,9 @@ def parseXmlFiles(ann_file, img_prefix, patch_path):
                         region=image.crop([bndbox_scaled["x1"], bndbox_scaled["y1"],
                                            bndbox_scaled["x2"], bndbox_scaled["y2"]])
                         target_area=region.width*region.height
-                        ratios[pic_name+"_{}.jpg".format(num)]=target_area/image_area
+                        width_ratios[pic_name+"_{}.jpg".format(num)]=region.width/width
+                        height_ratios[pic_name+"_{}.jpg".format(num)]=region.height/height
+                        area_ratios[pic_name+"_{}.jpg".format(num)]=target_area/image_area
                         #region.save(patch_path+"target/" + pic_name+"_{}.jpg".format(num))
 
         bnd_corner_list = [[labels_scaled[i]["x1"], labels_scaled[i]["y1"], labels_scaled[i]["x2"], labels_scaled[i]["y2"]] for i in range(len(labels_scaled))]
@@ -568,17 +563,18 @@ def parseXmlFiles(ann_file, img_prefix, patch_path):
         # cv2.namedWindow("img", 0)
         # cv2.imshow('img', img)
         # cv2.waitKey(0)
-    return ratios
+    return area_ratios,width_ratios,height_ratios
 
 if __name__ == '__main__':
     img_prefix = "../data/SSDD/VOC2007/"
-    j=1
     # values=list()
-    values=[]
+    values1=[]
+    values2 = []
+    values3 = []
     if 1:
         ann_file = "../data/SSDD/VOC2007/ImageSets/Main/train.txt"
         patch_path = "../data/SSDD/"
-        ratios=parseXmlFiles(ann_file, img_prefix, patch_path)
+        area_ratios,width_ratios,height_ratios=parseXmlFiles(ann_file, img_prefix, patch_path)
     if 0:
         ann_file = "../data/SSDD/VOC2007/ImageSets/Main/val.txt"
         patch_path = "../data/SSDD/"
@@ -588,11 +584,13 @@ if __name__ == '__main__':
         patch_path = "../data/SSDD/"
         parseXmlFiles(ann_file, img_prefix, patch_path)
 
-    for k in ratios:
-        values.append(ratios[k])
-    Xmin=0
-    Xmax=0.1
-    Ymin=0
-    Ymax=40
-    draw_hist(values, "Histogram of relative size distribution", "relative size", "numbers", Xmin, Xmax, Ymin, Ymax)
-    pdf.delta_time.dropna().plot(kind='kde', xlim=(-50, 300))
+    for k in area_ratios:
+        values1.append(area_ratios[k])
+    for k in width_ratios:
+        values2.append(width_ratios[k])
+    for k in height_ratios:
+        values3.append(height_ratios[k])
+    np.save("area_ratios",values1)
+    np.save("width_ratios", values2)
+    np.save("height_ratios", values3)
+
