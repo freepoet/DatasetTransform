@@ -8,8 +8,8 @@ import matplotlib.pyplot as plt
 # sns.set_palette("hls")
 #   must absolute path!!!!!!!!!!!!!!!!!!!!!
 area_ratios = np.load('/home/n/Github/Myrepo/CaptureTargetInImage/20200930/area_ratios.npy')
-width_ratios = np.load("/home/n/Github/Myrepo/CaptureTargetInImage/20200930//width_ratios.npy")
-height_ratios = np.load("/home/n/Github/Myrepo/CaptureTargetInImage/20200930//height_ratios.npy")
+width_ratios = np.load("/home/n/Github/Myrepo/CaptureTargetInImage/20200930/width_ratios.npy")
+height_ratios = np.load("/home/n/Github/Myrepo/CaptureTargetInImage/20200930/height_ratios.npy")
 # 参数依次为list,抬头,X轴标签,Y轴标签,XY轴的范围
 def draw_hist(myList, Title, Xlabel, Ylabel, Xmin, Xmax, Ymin, Ymax):
     plt.hist(myList, 3000)  # bins = 50，顺便可以控制bin宽度
