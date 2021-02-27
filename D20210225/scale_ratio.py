@@ -566,22 +566,22 @@ def parseXmlFiles(ann_file, img_prefix, patch_path):
     return area_ratios,width_ratios,height_ratios
 
 if __name__ == '__main__':
-    img_prefix = "../data/SSDD/VOC2007/"
+    img_prefix = "C:/data/SSDD/VOC2007/"
     # values=list()
     values1=[]
     values2 = []
     values3 = []
     if 1:
-        ann_file = "../data/SSDD/VOC2007/ImageSets/Main/train.txt"
-        patch_path = "../data/SSDD/"
+        ann_file = "C:/data/SSDD/VOC2007/ImageSets/Main/train.txt"
+        patch_path = "C:/data/SSDD/"
         area_ratios,width_ratios,height_ratios=parseXmlFiles(ann_file, img_prefix, patch_path)
     if 0:
-        ann_file = "../data/SSDD/VOC2007/ImageSets/Main/val.txt"
-        patch_path = "../data/SSDD/"
+        ann_file = "C:/data/SSDD/VOC2007/ImageSets/Main/val.txt"
+        patch_path = "C:/data/SSDD/"
         parseXmlFiles(ann_file, img_prefix, patch_path)
     if 0:
-        ann_file = "../data/SSDD/VOC2007/ImageSets/Main/trainval.txt"
-        patch_path = "../data/SSDD/"
+        ann_file = "C:/data/SSDD/VOC2007/ImageSets/Main/trainval.txt"
+        patch_path = "C:/data/SSDD/"
         parseXmlFiles(ann_file, img_prefix, patch_path)
 
     for k in area_ratios:

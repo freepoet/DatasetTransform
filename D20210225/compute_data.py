@@ -10,9 +10,9 @@
 # @Software: PyCharm
 """
 import numpy as np
-area_ratios = np.load('/home/n/Github/Myrepo/CaptureTargetInImage/20200930/area_ratios.npy')
-width_ratios = np.load("/home/n/Github/Myrepo/CaptureTargetInImage/20200930//width_ratios.npy")
-height_ratios = np.load("/home/n/Github/Myrepo/CaptureTargetInImage/20200930//height_ratios.npy")
+area_ratios = np.load('C:/ning/Github/MyRepo/LearningNotes/D20210225/area_ratios.npy')
+width_ratios = np.load("C:/ning/Github/MyRepo/LearningNotes/D20210225/width_ratios.npy")
+height_ratios = np.load("C:/ning/Github/MyRepo/LearningNotes/D20210225/height_ratios.npy")
 area_ratios=area_ratios.tolist()
 width_ratios=width_ratios.tolist()
 height_ratios=height_ratios.tolist()
