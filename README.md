@@ -1,9 +1,7 @@
-### 2021.02.25
-- **在fork库上进行push是不计算contribution的**
+### 2021.02.27
 
-- **SSDD目标尺寸分布**
 
-  CaptureTargetInImage/20200930
+
 
 ### 2021.01.23
 - **在fork库上进行push是不计算contribution的**
