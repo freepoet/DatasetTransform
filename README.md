@@ -5,7 +5,9 @@
 
 ### 2021.03.01
 - **绘制符合北航学报的曲线图**
- analyze_logs_buaa.py
+ 
+  mmdetection/tools/analyze_logs_buaa.py
+ 
 
 ### 2021.02.25
 - **SSDD目标尺寸分布**
