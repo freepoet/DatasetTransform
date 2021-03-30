@@ -500,6 +500,7 @@ def parseXmlFiles(ann_file, img_prefix, patch_path):
 
                 width=int(image.size[0])
                 height=int(image.size[1])
+
                 image_area=width*height
             if elem.tag == "object":  # elem.tag = frame,object
                 is_append = True
@@ -568,7 +569,7 @@ def parseXmlFiles(ann_file, img_prefix, patch_path):
 if __name__ == '__main__':
     img_prefix = "C:/data/SSDD/VOC2007/"
     # values=list()
-    values1=[]
+    values1 = []
     values2 = []
     values3 = []
     if 1:

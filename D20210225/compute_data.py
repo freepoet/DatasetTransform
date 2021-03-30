@@ -23,6 +23,6 @@ print(width_ratios_mean)
 height_ratios_mean=np.median(height_ratios)
 print(height_ratios_mean)
 print(max(area_ratios))
-big_value_index = [k for k,v in enumerate(area_ratios) if v<=0.2]
+big_value_index = [k for k,v in enumerate(area_ratios) if v <= 0.2]
 
 print(len(big_value_index)/len(area_ratios))
