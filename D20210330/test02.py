@@ -173,3 +173,5 @@ def bytes_to_cvimage(filebytes):
     image = Image.open(filebytes)
     img = cv2.cvtColor(np.asarray(image), cv2.COLOR_RGB2BGR)
     return img
+def fun1(i):
+    print(i)
