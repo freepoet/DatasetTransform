@@ -9,7 +9,7 @@ from mmcv import list_from_file
 
 def draw_caption(image, box, caption):
     b = np.array(box).astype(int)
-    cv2.putText(image, caption, (b[0], b[1] - 10), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 1 )
+    cv2.puText(image, caption, (b[0], b[1] - 10), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 1 )
     # cv2.putText(image, text, cordinate, font, size, color,thickness)
 
 def scale_bounding_box(old, img_size, scale_rate):
