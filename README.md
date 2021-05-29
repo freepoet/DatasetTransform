@@ -1,3 +1,8 @@
+### 2021.05.29
+JPG-PNG-to-MNIST-NN-Format 将scaled后的图片转换成mnist数据集后，但是在mmcls中，似乎无法被识别，放弃该方法。
+
+直接在mmcls中读取mnist数据集，然后在transform中resize图片，再进行训练。
+
 ### 2021.04.08
  - **lenet5 平移不变性实（相当于陈云的书第四章）**
 
