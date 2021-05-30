@@ -1,4 +1,13 @@
 ### 2021.05.29
+ - base/underline.ipynb
+
+  变量前后underline的含义
+  
+ - base/decorator.ipynb
+  
+  decorator装饰器用法
+
+### 2021.05.29
 JPG-PNG-to-MNIST-NN-Format 将scaled后的图片转换成mnist数据集后，但是在mmcls中，似乎无法被识别，放弃该方法。
 
 直接在mmcls中读取mnist数据集，然后在pipelinezz中resize图片，再进行训练。
