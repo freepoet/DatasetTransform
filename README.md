@@ -1,4 +1,4 @@
-### 2021.05.29
+### 2021.05.30
  - base/underline.ipynb
 
   变量前后underline的含义
@@ -12,15 +12,13 @@ JPG-PNG-to-MNIST-NN-Format 将scaled后的图片转换成mnist数据集后，但
 
 直接在mmcls中读取mnist数据集，然后在pipelinezz中resize图片，再进行训练。
 
-### 2021.04.08
- - **lenet5 平移不变性实（相当于陈云的书第四章）**
-
-  D20210408/test02
  
 ### 2021.04.06
- - **LENET5每层输出的可视化**
+ - test01.ipynb
+ 
+LENET5 每层输出的可视化
 
-  D20210406/test01
+LENET5 平移不变性实（相当于陈云的书第四章）**
 
  
 ### 2021.03.30
