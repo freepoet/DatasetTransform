@@ -12,7 +12,11 @@ JPG-PNG-to-MNIST-NN-Format 将scaled后的图片转换成mnist数据集后，但
 
 直接在mmcls中读取mnist数据集，然后在pipelinezz中resize图片，再进行训练。
 
+
+### 2021.04.14
+ - compute_correlation_of_train_and_test.py
  
+相关性曲线绘制
 ### 2021.04.06
  - test01.ipynb
  
