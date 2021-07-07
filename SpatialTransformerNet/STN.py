@@ -111,7 +111,6 @@ def train(epoch):
 # A simple test procedure to measure the STN performances on MNIST.
 #
 
-
 def test():
     with torch.no_grad():
         model.eval()
