@@ -4,55 +4,69 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 import torchvision
-from torchvision import datasets, transforms
+from torchvision.transforms import ToPILImage
 import matplotlib.pyplot as plt
 import numpy as np
+from my_datasetloader import SIM2MNIST_Dataset
+from torch.utils.data import  DataLoader
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 import ipdb
-plt.ion()   # interactive mode
+# plt.ion()   # interactive mode
 from six.moves import urllib
 # opener = urllib.request.build_opener()
 # opener.addheaders = [('User-agent', 'Mozilla/5.0')]
 # urllib.request.install_opener(opener)
+show=ToPILImage()
+data_dir='/media/n/SanDiskSSD/HardDisk/data/stn_mnist_RTSaug'
+train_data = SIM2MNIST_Dataset(data_dir=data_dir,train=True)
+train_loader = DataLoader(dataset=train_data,batch_size=64, shuffle=False)
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+test_data = SIM2MNIST_Dataset(data_dir=data_dir,train=False)
+test_loader = DataLoader(dataset=test_data,batch_size=64, shuffle=False)
 
+
+
+
+# for  i,(data, label) in enumerate(train_loader):  # data :[64, 1, 28, 28]  target:[64]
+#     ipdb.set_trace()
+#     data, target = data.to(device), label.to(device)
 # Training dataset
-train_loader = torch.utils.data.DataLoader(
-    datasets.MNIST(root='/media/n/SanDiskSSD/HardDisk/data', train=True, download=False,
-                   transform=transforms.Compose([
-                       transforms.ToTensor(),
-                       transforms.Normalize((0.1307,), (0.3081,))
-                   ])), batch_size=64, shuffle=True, num_workers=4)
-# Test dataset
-test_loader = torch.utils.data.DataLoader(
-    datasets.MNIST(root='/media/n/SanDiskSSD/HardDisk/data', train=False,download=False,
-     transform=transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize((0.1307,), (0.3081,))
-    ])), batch_size=64, shuffle=True, num_workers=4)
+# train_loader = torch.utils.data.DataLoader(
+#     datasets.MNIST(root='/media/n/SanDiskSSD/HardDisk/data', train=True, download=False,
+#                    transform=transforms.Compose([
+#                        transforms.ToTensor(),
+#                        transforms.Normalize((0.1307,), (0.3081,))
+#                    ])), batch_size=64, shuffle=True, num_workers=4)
+# # Test dataset
+# test_loader = torch.utils.data.DataLoader(
+#     datasets.MNIST(root='/media/n/SanDiskSSD/HardDisk/data', train=False,download=False,
+#      transform=transforms.Compose([
+#         transforms.ToTensor(),
+#         transforms.Normalize((0.1307,), (0.3081,))
+#     ])), batch_size=64, shuffle=True, num_workers=4)
 
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
-        self.conv1 = nn.Conv2d(1, 10, kernel_size=5) #   64 1 28 28    64 10 24 24   64 10 12 12
-        self.conv2 = nn.Conv2d(10, 20, kernel_size=5) #  64 10 12 12   64 20  8  8   64 20  4  4
+        self.conv1 = nn.Conv2d(1, 10, kernel_size=5) #   64 1 28 28    64 10 24 24   64 10 12 12   42  38   19
+        self.conv2 = nn.Conv2d(10, 20, kernel_size=5) #  64 10 12 12   64 20  8  8   64 20  4  4   19  15   7
         self.conv2_drop = nn.Dropout2d() #
-        self.fc1 = nn.Linear(320, 50) #
+        self.fc1 = nn.Linear(20*7*7, 50) #
         self.fc2 = nn.Linear(50, 10) #
 
         # Spatial transformer localization-network
         self.localization = nn.Sequential(
-            nn.Conv2d(1, 8, kernel_size=7), # 64 1 28  28  64 8 22 22
-            nn.MaxPool2d(2, stride=2),#        64 8 22 22  64 8 11 11
+            nn.Conv2d(1, 8, kernel_size=7), # 64 1 28  28  64 8 22 22   42  36
+            nn.MaxPool2d(2, stride=2),#        64 8 22 22  64 8 11 11   36  18
             nn.ReLU(True),#
-            nn.Conv2d(8, 10, kernel_size=5),#   64 8 11 11   64 10 7 7
-            nn.MaxPool2d(2, stride=2),#     64 10 7 7        64 10 3 3
+            nn.Conv2d(8, 10, kernel_size=5),#   64 8 11 11   64 10 7 7  18   14
+            nn.MaxPool2d(2, stride=2),#     64 10 7 7        64 10 3 3   14   7
             nn.ReLU(True)#
         )
 
         # Regressor for the 3 * 2 affine matrix
         self.fc_loc = nn.Sequential(
-            nn.Linear(10 * 3 * 3, 32),
+            nn.Linear(10 * 7 * 7, 32),
             nn.ReLU(True),
             nn.Linear(32, 3 * 2)
         )
@@ -64,7 +78,7 @@ class Net(nn.Module):
     # Spatial transformer network forward function
     def stn(self, x):
         xs = self.localization(x)  #[64, 10, 3, 3]
-        xs = xs.view(-1, 10 * 3 * 3)  #[64, 90]
+        xs = xs.view(-1, 10 * 7 * 7)  #[64, 90]
         theta = self.fc_loc(xs)  # [64, 6]
         theta = theta.view(-1, 2, 3) # [64, 2, 3]
 
@@ -80,7 +94,7 @@ class Net(nn.Module):
         # Perform the usual forward pass
         x = F.relu(F.max_pool2d(self.conv1(x), 2))  #64 10 12 12
         x = F.relu(F.max_pool2d(self.conv2_drop(self.conv2(x)), 2))  # 64 20  4  4
-        x = x.view(-1, 320)  #  [64, 320]
+        x = x.view(-1, 20*7*7)  #  [64, 320]
         x = F.relu(self.fc1(x))
         x = F.dropout(x, training=self.training)
         x = self.fc2(x)
@@ -95,8 +109,12 @@ optimizer = optim.SGD(model.parameters(), lr=0.01)
 def train(epoch):
     model.train()
     for batch_idx, (data, target) in enumerate(train_loader): # data :[64, 1, 28, 28]  target:[64]
-        data, target = data.to(device), target.to(device)
 
+        # plt.imshow((data[3,:,:,:].squeeze_(0)+1)/2*255)
+        # plt.show()
+        # ipdb.set_trace()
+
+        data, target = data.to(device), target.to(device)   #tensor从CPU到GPU
         optimizer.zero_grad()
         output = model(data)
         loss = F.nll_loss(output, target)
@@ -165,7 +183,7 @@ def visualize_stn():
         axarr[1].imshow(out_grid)
         axarr[1].set_title('Transformed Images')
 
-for epoch in range(1, 20 + 1):
+for epoch in range(1, 40 + 1):
     train(epoch)
     test()
 
