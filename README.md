@@ -19,10 +19,10 @@ JPG-PNG-to-MNIST-NN-Format 将scaled后的图片转换成mnist数据集后，但
 相关性曲线绘制
 ### 2021.04.06
  - test01.ipynb
- 
+ - test02.ipynb
 LENET5 每层输出的可视化
 
-LENET5 平移不变性实（相当于陈云的书第四章）**
+LENET5 平移不变性实现（相当于陈云的书第四章）**
 
  
 ### 2021.03.30
